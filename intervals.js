@@ -1,20 +1,20 @@
-function intervalConstruction(arr) {
-  const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-  const semitones = ['--', '--', '-', '--', '--', '--', '-'];
-  const intervals = {
-    m2: [1, 2],
-    M2: [2, 2],
-    m3: [3, 3],
-    M3: [4, 3],
-    P4: [5, 4],
-    P5: [7, 5],
-    m6: [8, 6],
-    M6: [9, 6],
-    m7: [10, 7],
-    M7: [11, 7],
-    P8: [12, 8],
-  };
+const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const semitones = ['--', '--', '-', '--', '--', '--', '-'];
+const intervals = {
+  m2: [1, 2],
+  M2: [2, 2],
+  m3: [3, 3],
+  M3: [4, 3],
+  P4: [5, 4],
+  P5: [7, 5],
+  m6: [8, 6],
+  M6: [9, 6],
+  m7: [10, 7],
+  M7: [11, 7],
+  P8: [12, 8],
+};
 
+function intervalConstruction(arr) {
   const [interval, start, direction] = arr;
 
   const [semitone, degree] = intervals[interval];
@@ -115,41 +115,14 @@ function intervalConstruction(arr) {
   return res;
 }
 
-console.log(intervalConstruction(['M2', 'C', 'asc'])); //D
-console.log(intervalConstruction(['P5', 'B', 'asc'])); //F#
-console.log(intervalConstruction(['m2', 'Bb', 'dsc'])); //A
-console.log(intervalConstruction(['M3', 'Cb', 'dsc'])); //Abb
-console.log(intervalConstruction(['P4', 'G#', 'dsc'])); //D#
-console.log(intervalConstruction(['m3', 'B', 'dsc'])); //G#
-console.log(intervalConstruction(['m2', 'Fb', 'asc'])); //Gbb
-console.log(intervalConstruction(['M2', 'E#', 'dsc'])); //D#
-console.log(intervalConstruction(['P4', 'E', 'dsc'])); //B
-console.log(intervalConstruction(['m2', 'D#', 'asc'])); //E
-console.log(intervalConstruction(['M7', 'G', 'asc'])); //F#
-
 function intervalIdentification(arr) {
-  const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-  const dashes = ['--', '--', '-', '--', '--', '--', '-'];
-  const intervals = {
-    m2: [1, 2],
-    M2: [2, 2],
-    m3: [3, 3],
-    M3: [4, 3],
-    P4: [5, 4],
-    P5: [7, 5],
-    m6: [8, 6],
-    M6: [9, 6],
-    m7: [10, 7],
-    M7: [11, 7],
-    P8: [12, 8],
-  };
   const [start, end, direction] = arr;
 
   const startIndex = notes.indexOf(start.slice(0, 1));
   const endIndex = notes.indexOf(end.slice(0, 1));
 
   let newArr = [];
-  let newDashes = [];
+  let newSemitones = [];
 
   if (direction !== 'dsc') {
     newArr =
@@ -157,66 +130,46 @@ function intervalIdentification(arr) {
         ? notes.slice(startIndex).concat(notes.slice(0, endIndex + 1))
         : notes.slice(startIndex, endIndex + 1);
 
-    newDashes =
+    newSemitones =
       endIndex < startIndex
-        ? dashes.slice(startIndex).concat(dashes.slice(0, endIndex))
-        : dashes.slice(startIndex, endIndex);
+        ? semitones.slice(startIndex).concat(semitones.slice(0, endIndex))
+        : semitones.slice(startIndex, endIndex);
   } else if (direction === 'dsc' && endIndex < startIndex) {
     newArr = notes.slice(endIndex, startIndex + 1);
 
-    newDashes = dashes.slice(endIndex, startIndex);
+    newSemitones = semitones.slice(endIndex, startIndex);
   } else if (endIndex < startIndex) {
     newArr = notes.slice(endIndex, startIndex + 1);
 
-    newDashes = dashes.slice(endIndex, endIndex - startIndex);
+    newSemitones = semitones.slice(endIndex, endIndex - startIndex);
   } else if (direction === 'dsc' && endIndex > startIndex) {
     newArr = notes.slice(0, startIndex + 1).concat(notes.slice(endIndex));
 
-    newDashes = dashes.slice(0, startIndex + 1).concat(dashes.slice(endIndex + 1));
+    newSemitones = semitones.slice(0, startIndex + 1).concat(semitones.slice(endIndex + 1));
   } else {
     newArr = notes.slice(0, startIndex + 1).concat(notes.slice(endIndex));
 
-    newDashes = dashes.slice(0, startIndex + 1).concat(dashes.slice(endIndex));
+    newSemitones = semitones.slice(0, startIndex + 1).concat(semitones.slice(endIndex));
   }
 
   const countDegrees = newArr.length;
-  let countDashes = newDashes.reduce((acc, el) => acc + el.length, 0);
+  let countSemitones = newSemitones.reduce((acc, el) => acc + el.length, 0);
+
+  start.length > 1
+    ? start.includes('b')
+      ? (countSemitones -= start.length - 1)
+      : (countSemitones += start.length - 1)
+    : 0;
 
   if (direction === 'dsc' && endIndex > startIndex) {
-    start.length > 1
-      ? start.includes('b')
-        ? (countDashes = countDashes - (start.length - 1))
-        : (countDashes = countDashes + (start.length - 1))
-      : 0;
-
-    end.length > 1
-      ? end.includes('b')
-        ? (countDashes = countDashes + (end.length - 1))
-        : (countDashes = countDashes + (end.length - 1))
-      : 0;
+    end.length > 1 ? (countSemitones += end.length - 1) : 0;
   } else if (direction === 'dsc' && endIndex < startIndex) {
-    start.length > 1
-      ? start.includes('b')
-        ? (countDashes = countDashes - (start.length - 1))
-        : (countDashes = countDashes + (start.length - 1))
-      : 0;
-
-    end.length > 1
-      ? end.includes('b')
-        ? (countDashes = countDashes - (end.length - 1))
-        : (countDashes = countDashes - (end.length - 1))
-      : 0;
+    end.length > 1 ? (countSemitones -= end.length - 1) : 0;
   } else {
-    start.length > 1
-      ? start.includes('b')
-        ? (countDashes = countDashes - (start.length - 1))
-        : (countDashes = countDashes + (start.length - 1))
-      : 0;
-
     end.length > 1
       ? end.includes('b')
-        ? (countDashes = countDashes - (end.length - 1))
-        : (countDashes = countDashes + (end.length - 1))
+        ? (countSemitones -= end.length - 1)
+        : (countSemitones += end.length - 1)
       : 0;
   }
 
@@ -224,7 +177,7 @@ function intervalIdentification(arr) {
   const res = keys
     .filter((el) => {
       const [semitone, degree] = intervals[el];
-      if (semitone === Math.abs(countDashes) && degree === countDegrees) {
+      if (semitone === Math.abs(countSemitones) && degree === countDegrees) {
         return el;
       }
     })
