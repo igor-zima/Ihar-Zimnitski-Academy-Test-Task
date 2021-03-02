@@ -4,7 +4,7 @@
 
 **tel:** +375 44 572-69-02
 
-**email:** ilgardance@mail.ru
+**email:** zimnitski.ihar@mail.ru
 
 **github** https://github.com/igorzima
 
