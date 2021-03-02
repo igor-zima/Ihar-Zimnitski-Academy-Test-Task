@@ -24,7 +24,7 @@ I am ready to spend a lot of time to study, I have experience in teamwork, I str
 - CSS/SCSS
 - JavaScript
 - Git;
-- Webpack
+- Webpack5
 - Markdown;
 
 ---
