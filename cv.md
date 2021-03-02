@@ -6,7 +6,7 @@
 
 **email:** zimnitski.ihar@mail.ru
 
-**github** https://github.com/igorzima
+**github** https://github.com/igor-zima
 
 **LinkedIn** https://www.linkedin.com/in/igorzima/
 
